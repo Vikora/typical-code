@@ -24,6 +24,7 @@ def waste_some_time(num_times):
 
 waste_some_time(100)
 # Finished 'waste_some_time' in 0.3974 secs
+print()
 
 
 """
@@ -45,3 +46,30 @@ def cheer_up(name):
     print(f"{name}, you're the best!")
 
 cheer_up('Vi')
+print()
+
+
+"""
+A decorator without arguments
+"""
+def robbery(func):
+    print("# I'm stealing your money")
+    def wrapper(*args, **kwargs):
+        n = 5
+        print(f"# I've taken ${n} from {kwargs['name']}")
+        args = (args[0] - n,) + args[1:]
+        return func(*args, **kwargs)
+    return wrapper
+
+
+@robbery
+def wallet(money, name=None):
+    print(f"{name} has ${money} in their wallet")
+
+#wallet = robbery(wallet) # @robbery
+
+n = 30
+name = "Citizen"
+print(f"{name} put ${n} in their wallet") 
+wallet(n, name=name)
+
