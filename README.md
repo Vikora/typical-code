@@ -19,6 +19,25 @@ has its own address space, memory, data stack.
 is an execution unit within a single process.
 *  Threads within a process share the same memory space.
 
+
+## Future
+
+`concurrent.futures.Future` and `asyncio.Future`
+
+An instance of either Future class represents **a deferred computation** that may or may
+not have completed. This is somewhat similar to the Deferred class in Twisted, the
+Future class in Tornado, and Promise in modern JavaScript.
+
+* Futures encapsulate pending operations.
+
+* Futures are meant to be **instantiated exclusively by the concurrency framework**.
+  * A Future represents something that
+will eventually run, therefore it must be scheduled to run, and that's the job of the
+framework.
+
+* Application code is not supposed to change the state of a future.
+
+
 ## multithreading
  
 ### threading.Event
@@ -46,4 +65,5 @@ class Foo:
         self._second_printed.wait()
         printThird()
 ```
+
 
