@@ -33,13 +33,18 @@ Spark and MapReduce are both __distributed data processing frameworks__ used for
 # Glossary
 
 * **RDD (Resilient Distributed Dataset)** is a low-level data structure in Apache Spark. RDDs are an immutable distributed collection of objects that can be processed in parallel across a cluster of machines.
-  *  RDDs are resilient because they can reconstruct lost partitions. This resilience is achieved through lineage information, which tracks the series of transformations applied to the base dataset. By using lineage, Spark can recompute lost or damaged partitions by replaying the transformations from the source data.
+  * RDDs are resilient because they can reconstruct lost partitions. This resilience is achieved through lineage information, which tracks the series of transformations applied to the base dataset. By using lineage, Spark can recompute lost or damaged partitions by replaying the transformations from the source data.
+  * RDD serialize and de-serialize data when it distributes across a cluster (repartition & shuffling).
 * **DataFrame** is a distributed collection of structured data organized into named columns, similar to a table in a relational database.
+  * Off-heap storage for data in binary format.
+  * Encoder code on the fly to work with this binary format for your specific objects. 
 * **Dataset**
+* **SparkSession** - an entry point to underlying Spark functionality in order to programmatically create Spark RDD, DataFrame, and DataSet.
 
 
-## Catalyst Optimizer
+# Catalyst Optimizer
 is a query optimization framework in Apache Spark. It is responsible for optimizing and transforming the logical and physical execution plans of Spark SQL queries, DataFrame, and Dataset operations. The goal of the Catalyst Optimizer is to generate an efficient execution plan that can be executed on distributed clusters.
 
 ![Catalyst-Optimizer-diagram](https://www.databricks.com/wp-content/uploads/2018/05/Catalyst-Optimizer-diagram.png)
 
+# Cache and persist
