@@ -54,6 +54,7 @@ is a query optimization framework in Apache Spark. It is responsible for optimiz
 * `cache()`
   * RDD default: `MEMORY_ONLY`
   * DataFrame or Dataset default: `MEMORY_AND_DISK`, because recomputing the in-memory columnar representation of the underlying table is expensive.
+  * Dataset `cache()` is an alias for `persist(StorageLevel.MEMORY_AND_DISK)`
 * `persist()` method saves it to the user-defined storage level.
   * When you persist a dataset, each node stores its partitioned data in memory and reuses them in other actions on that dataset. And Spark's persisted data on nodes are fault-tolerant meaning if any partition of a Dataset is lost, it will automatically be recomputed using the original transformations that created it.
 
@@ -83,5 +84,6 @@ Spark Shuffle is an expensive operation since it involves the following:
 * Involves data serialization and deserialization
 * Network I/O
 
+Number of partitions after shuffle:
 * RDD Shuffle - return the same number of partitions.
 * DataFrame Shuffle - increases the partitions when the transformation operation performs shuffling.
