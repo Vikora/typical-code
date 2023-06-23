@@ -48,3 +48,40 @@ is a query optimization framework in Apache Spark. It is responsible for optimiz
 ![Catalyst-Optimizer-diagram](https://www.databricks.com/wp-content/uploads/2018/05/Catalyst-Optimizer-diagram.png)
 
 # Cache and persist
+
+`cache()` and `persist()` are to store the intermediate computation of an RDD, DataFrame, and Dataset so they can be reused in subsequent actions.
+
+* `cache()`
+  * RDD default: `MEMORY_ONLY`
+  * DataFrame or Dataset default: `MEMORY_AND_DISK`, because recomputing the in-memory columnar representation of the underlying table is expensive.
+* `persist()` method saves it to the user-defined storage level.
+  * When you persist a dataset, each node stores its partitioned data in memory and reuses them in other actions on that dataset. And Spark's persisted data on nodes are fault-tolerant meaning if any partition of a Dataset is lost, it will automatically be recomputed using the original transformations that created it.
+
+Storage levels:
+
+* `MEMORY_ONLY_SER` - the same as `MEMORY_ONLY` but it stores RDD as serialized objects to JVM memory. It takes less memory (space-efficient) then `MEMORY_ONLY` as it saves objects as serialized and takes more CPU cycles to deserialize.
+
+```
+Storage Level    Space used  CPU time  In memory  On-disk  Serialized   Recompute some partitions
+----------------------------------------------------------------------------------------------------
+MEMORY_ONLY          High        Low       Y          N        N         Y    
+MEMORY_ONLY_SER      Low         High      Y          N        Y         Y
+MEMORY_AND_DISK      High        Medium    Some       Some     Some      N
+MEMORY_AND_DISK_SER  Low         High      Some       Some     Y         N
+DISK_ONLY            Low         High      N          Y        Y         N
+```
+
+# Shuffle
+
+Shuffling is a mechanism Spark uses to redistribute the data across different executors and even across machines. Spark shuffling triggers for transformation operations like `gropByKey()`, `reducebyKey()`, `join()`, `groupBy()`.
+
+Default shuffle partition number comes from Spark SQL configuration 
+`spark.sql.shuffle.partitions` which is by default set to 200.
+
+Spark Shuffle is an expensive operation since it involves the following:
+* Disk I/O
+* Involves data serialization and deserialization
+* Network I/O
+
+* RDD Shuffle - return the same number of partitions.
+* DataFrame Shuffle - increases the partitions when the transformation operation performs shuffling.
